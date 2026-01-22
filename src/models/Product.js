@@ -17,6 +17,7 @@ const productSchema = new mongoose.Schema(
         type: String,
         // required: true,
       },
+      publicId: String,
       alt: {
         type: String,
         default: "Product thumbnail",
@@ -27,6 +28,7 @@ const productSchema = new mongoose.Schema(
     images: [
       {
         url: String,
+        publicId: String,
         alt: String,
       },
     ],
@@ -43,7 +45,6 @@ const productSchema = new mongoose.Schema(
     category: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Category", // optional: good for relationships
     },
 
     price: {
@@ -51,10 +52,11 @@ const productSchema = new mongoose.Schema(
       required: true,
       min: [0, "Price cannot be negative"],
     },
-    oldPrice: {
+    off: {
       type: Number,
-      required: true,
-      min: [0, "Old price cannot be negative"],
+      default: 0, // 0% discount by default
+      min: [0, "Discount cannot be less than 0%"],
+      max: [100, "Discount cannot exceed 100%"],
     },
     stock: {
       type: Number,
@@ -81,7 +83,7 @@ const productSchema = new mongoose.Schema(
       type: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Product", productSchema);
